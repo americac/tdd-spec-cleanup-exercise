@@ -1,16 +1,6 @@
 require "rails_helper"
 
 RSpec.describe Invitation do
- # let(:invitation) { build(:invitation, team: team, user: new_user) }
- # let(:new_user) { create(:user, email: "rookie@example.com") }
- # let(:team) { create(:team, name: "A fine team") }
- # let(:team_owner) { create(:user) }
-
- # before do
- #   team.update!(owner: team_owner)
- #   team_owner.update!(team: team)
- # end
-
   describe "callbacks" do
     describe "after_save" do
       context "with valid data" do
@@ -103,7 +93,6 @@ RSpec.describe Invitation do
 	team = create(:team, name: "A fine team")
 
 	invitation = build(:invitation, team: team, user: new_user)
-        invitation.save
 
         log_statement = invitation.event_log_statement
         expect(log_statement).to include("PENDING")
@@ -112,7 +101,11 @@ RSpec.describe Invitation do
 
     context "when the record is not saved and not valid" do
       it "includes INVALID" do
-        invitation.user = nil
+	new_user = nil 
+	team = create(:team, name: "A fine team")
+
+	invitation = build(:invitation, team: team, user: new_user)
+
         log_statement = invitation.event_log_statement
         expect(log_statement).to include("INVALID")
       end
